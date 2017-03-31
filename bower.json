@@ -1,0 +1,33 @@
+{
+    "name": "inventory",
+    "license": "MIT",
+    "authors": [
+        "JD-R2 <jon_eldiablo@hotmail.com>"
+    ],
+    "description": "A jump-start for jQuery plugins development.",
+    "keywords": [
+        "jquery",
+        "plugin",
+        "boilerplate",
+        "jquery-plugin",
+        "jquery-boilerplate"
+    ],
+    "main": "dist/*",
+    "dependencies": {
+        "jquery": "2.2.4",
+        "free-jqgrid": "^4.14.0",
+        "bootstrap": "^3.3.7",
+        "components-font-awesome": "^4.7.0",
+        "latinize": "^0.4.0",
+        "select2-bootstrap-theme": "^0.1.0-beta.9",
+        "select2": "^4.0.3"
+    },
+    "ignore": [
+        "npm-debug.log",
+        "bower_components",
+        "node_modules",
+        "src",
+        "demo",
+        "test"
+    ]
+}

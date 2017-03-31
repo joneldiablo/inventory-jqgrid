@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>jQuery inventory</title>
+    <!-- bower_components styles -->
+    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../bower_components/free-jqgrid/dist/css/ui.jqgrid.min.css" />
+    <link rel="stylesheet" href="../bower_components/components-font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="../bower_components/select2/dist/css/select2.min.css">
+    <link rel="stylesheet" href="../bower_components/select2-bootstrap-theme/dist/select2-bootstrap.min.css">
+    <!-- bower_components scripts -->
+    <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../bower_components/free-jqgrid/dist/jquery.jqgrid.min.js"></script>
+    <script src="../bower_components/latinize/latinize.js"></script>
+    <script src="../bower_components/select2/dist/js/select2.full.min.js"></script>
+    <script src="../bower_components/select2/dist/js/i18n/es.js"></script>
+    <!--tps styles -->
+    <link href="./assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="./assets/css/core.css" rel="stylesheet" type="text/css" />
+    <link href="./assets/css/components.css" rel="stylesheet" type="text/css" />
+    <link href="./assets/css/icons.css" rel="stylesheet" type="text/css" />
+    <link href="./assets/css/pages.css" rel="stylesheet" type="text/css" />
+    <link href="./assets/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="./assets/css/responsive.css" rel="stylesheet" type="text/css" />
+    <link href="./assets/css/tps.css" rel="stylesheet" type="text/css" />
+
+    <!--inventory -->
+    <link rel="stylesheet" href="../dist/inventory.min.css" />
+    <script src="../dist/i18n/locale.es-MX.min.js"></script>
+    <script src="../dist/inventory.min.js"></script>
+
+</head>
+
+<body>
+    <div class="content-page">
+        <div class="content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <br>
+                        <div id="inventory-wrap">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $("meta[name='_csrf']").attr("content")
+                }
+            });
+            $("#inventory-wrap").inventory({
+                jqgrid: {
+                    datatype: "local",
+                    data: [{
+                            "idSucursal": 1,
+                            "idProducto": 1,
+                            "sucursal": "metepec",
+                            "producto": "dhers",
+                            "marca": "marquesitas",
+                            "existencia": 95.71,
+                            "minimo": 47.01,
+                            "maximo": 31.75,
+                            "costo": "6.69",
+                            "precio": "5.69"
+                        }]
+                        /**
+                         * ATENCION!!!!!!
+                         * usando url, borrar las dos opciones anteriores data y datatype
+                         */
+                        //url:"<spring:url value='/resources/bower_components/inventory/inventario.json'/>",
+                        //method:"GET"
+                        //una poca de ayuda: $(<selector>).inventory("help"), revisar consola
+                },
+                select2: {
+                    data: [{
+                        "id": 1,
+                        "sucursal": "mexicaltzinco"
+                    }, {
+                        "id": 2,
+                        "sucursal": "ozolotepec"
+                    }, {
+                        "id": 3,
+                        "sucursal": "tenancingo"
+                    }, {
+                        "id": 4,
+                        "sucursal": "contraesquina"
+                    }],
+                    ajax: null
+                        /**
+                         * usando url borrar data y cambiar ajax por:
+                         */
+                        //ajax:{url:"<spring:url value='/resources/bower_components/inventory/sucursales.json'/>"}
+                }
+            });
+            $("#inventory-wrap").on("inventory.saveRow", function(e, data) {
+                console.log(data);
+            });
+        });
+    </script>
+</body>
+
+</html>
