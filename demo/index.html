@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css" />
   <link rel="stylesheet" href="../bower_components/free-jqgrid/dist/css/ui.jqgrid.min.css" />
   <link rel="stylesheet" href="../bower_components/components-font-awesome/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="../bower_components/fontawesome-actions/dist/css/font-awesome.min.css" />
   <link rel="stylesheet" href="../bower_components/select2/dist/css/select2.min.css">
   <link rel="stylesheet" href="../bower_components/select2-bootstrap-theme/dist/select2-bootstrap.min.css">
   <!-- bower_components scripts -->
@@ -56,8 +57,30 @@
       });
       $("#inventory-wrap").inventory({
         marca: false,
+        advancedSearch: false,
         jqgrid: {
-          datatype: "local",
+          //mtype: "POST",
+          /*loadonce: false,
+          mtype: "GET",
+          forceClientSorting: true,
+          prmNames: {
+            page: "_page",
+            rows: "_limit",
+            sort: "_sort",
+            order: "_order",
+            //search: "q",
+            nd: "nd",
+            id: "id",
+            idold: "idOld",
+            oper: "oper",
+            editoper: "edit",
+            addoper: "add",
+            deloper: "del",
+            subgridid: "id",
+            npage: null,
+            totalrows: "totalrows"
+          },*/
+          /*datatype: "local",
           data: [{
               "idSucursal": 1,
               "idProducto": 1,
@@ -69,17 +92,17 @@
               "maximo": 31.75,
               "costo": "6.69",
               "precio": "5.69"
-            }]
-            /**
-             * ATENCION!!!!!!
-             * usando url, borrar las dos opciones anteriores data y datatype
-             */
-            //url:"<spring:url value='/resources/bower_components/inventory/inventario.json'/>",
-            //method:"GET"
-            //una poca de ayuda: $(<selector>).inventory("help"), revisar consola
+            }]*/
+          /**
+           * ATENCION!!!!!!
+           * usando url, borrar las dos opciones anteriores data y datatype
+           */
+          //url: "localhost:3000/productos" //"<spring:url value='/resources/bower_components/inventory/inventario.json'/>",
+          //method:"GET"
+          //una poca de ayuda: $(<selector>).inventory("help"), revisar consola
         },
         select2: {
-          data: [{
+          /*data: [{
             "id": 1,
             "sucursal": "mexicaltzinco"
           }, {
@@ -92,11 +115,11 @@
             "id": 4,
             "sucursal": "contraesquina"
           }],
-          ajax: null
-            /**
-             * usando url borrar data y cambiar ajax por:
-             */
-            //ajax:{url:"<spring:url value='/resources/bower_components/inventory/sucursales.json'/>"}
+          ajax: null*/
+          /**
+           * usando url borrar data y cambiar ajax por:
+           */
+          //ajax:{url:"<spring:url value='/resources/bower_components/inventory/sucursales.json'/>"}
         }
       });
       $("#inventory-wrap").on("inventory.saveRow", function(e, data) {

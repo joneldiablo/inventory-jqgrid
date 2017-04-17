@@ -4,6 +4,7 @@
     var pluginName = "inventory",
         defaults = {
             marca: true,
+            advancedSearch: true,
             title: "Listado del Inventario",
             dataLoaded: false,
             dataProductos: {},
@@ -93,7 +94,7 @@
                     groupText: [ "" ],
                     groupOrder: [ "asc" ],
                     groupSummary: [ false ],
-                    groupSummaryPos: [ 'header' ],
+                    groupSummaryPos: [ "header" ],
                     groupCollapse: true
                 }
             },
@@ -102,9 +103,12 @@
                 minimumInputLength: 0,
                 ajax: {
                     url: "http://localhost:3000/sucursales",
-                    dataType: 'json',
+                    dataType: "json",
                     delay: 250,
-                    cache: true
+                    cache: true,
+                    data: {
+                        language: "es"
+                    }
                 }
             }
         };
@@ -214,8 +218,8 @@
             var $col4P = $col4B.clone( );
             var $labelP = $( "<label>", { for: "productsFilter", "class": "control-label" } ).text( "Producto" );
             var $inputProductsFilter = $( "<input>", { type: "text", "class": "form-control", id: "productsFilter" } );
-            var $col4C = $col4B.clone( );
-            var $inputClearFilter = $( "<input>", { type: "button", "class": "form-control btn btn-primary disabled", id: "clearFilter", value: "Limpiar filtros", disabled: "disabled", css: { marginTop: 25 } } ).click( function( ) { inventory.filterClear( ); } );
+            var $col4C = $( "<div>", { "class": "form-group col-sm-1" } );
+            var $inputClearFilter = $( "<button>", { type: "button", "class": "form-control btn btn-danger disabled", id: "clearFilter", title: "Limpiar filtros", disabled: "disabled", css: { marginTop: 25 } } ).html( "<i class='fa fa-filter-remove'></i>" ).click( function( ) { inventory.filterClear( ); } );
             var $grid = $( "<table>" );
             $container.append( $title, $rowFilters, $grid );
             $rowFilters.find( "div" ).append( $col4B, $col4P, $col4C );
@@ -234,7 +238,7 @@
                     edit: false,
                     add: false,
                     del: false,
-                    search: true,
+                    search: inventory.settings.advancedSearch,
                     refresh: true
                 }, {}, {}, {}, {
                     closeAfterSearch: true,
@@ -256,7 +260,7 @@
             } );
             $selectBranchesFilter.on( "change", function( e ) {
                 var $selector = $( this );
-                var branches = $selector.select2( 'data' ).map( function( elem ) {
+                var branches = $selector.select2( "data" ).map( function( elem ) {
                     return elem.sucursal;
                 } );
                 inventory.filterByBranches( branches );
@@ -332,6 +336,7 @@
             return true;
         },
         filterClear: function( ) {
+            this.filterDomClear( );
             var postData = this.$grid.jqGrid( "getGridParam", "postData" );
             postData.filters = "";
             this.$grid.jqGrid( "setGridParam", {
@@ -341,12 +346,11 @@
                 page: 1,
                 current: true
             } ] );
-            this.filterDomClear( );
             return true;
         },
         filterDomClear: function( ) {
-            this.$selectBranchesFilter.val( null ).trigger( "change" );
             this.$inputProductsFilter.val( "" );
+            this.$selectBranchesFilter.val( null ).trigger( "change" );
             this.$inputClearFilter.addClass( "disabled" ).prop( "disabled", true );
         },
         filterByProducts: function( searchText ) {
