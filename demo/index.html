@@ -2,6 +2,11 @@
 <html>
 
 <head>
+  <meta http-equiv="Expires" content="0" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>jQuery inventory</title>
   <!-- bower_components styles -->
   <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css" />
@@ -56,70 +61,10 @@
         }
       });
       $("#inventory-wrap").inventory({
-        marca: false,
-        advancedSearch: false,
+        //mergeConfig: true,
         jqgrid: {
-          //mtype: "POST",
-          /*loadonce: false,
-          mtype: "GET",
-          forceClientSorting: true,
-          prmNames: {
-            page: "_page",
-            rows: "_limit",
-            sort: "_sort",
-            order: "_order",
-            //search: "q",
-            nd: "nd",
-            id: "id",
-            idold: "idOld",
-            oper: "oper",
-            editoper: "edit",
-            addoper: "add",
-            deloper: "del",
-            subgridid: "id",
-            npage: null,
-            totalrows: "totalrows"
-          },*/
-          /*datatype: "local",
-          data: [{
-              "idSucursal": 1,
-              "idProducto": 1,
-              "sucursal": "metepec",
-              "producto": "dhers",
-              "marca": "marquesitas",
-              "existencia": 95.71,
-              "minimo": 47.01,
-              "maximo": 31.75,
-              "costo": "6.69",
-              "precio": "5.69"
-            }]*/
-          /**
-           * ATENCION!!!!!!
-           * usando url, borrar las dos opciones anteriores data y datatype
-           */
-          //url: "localhost:3000/productos" //"<spring:url value='/resources/bower_components/inventory/inventario.json'/>",
-          //method:"GET"
-          //una poca de ayuda: $(<selector>).inventory("help"), revisar consola
-        },
-        select2: {
-          /*data: [{
-            "id": 1,
-            "sucursal": "mexicaltzinco"
-          }, {
-            "id": 2,
-            "sucursal": "ozolotepec"
-          }, {
-            "id": 3,
-            "sucursal": "tenancingo"
-          }, {
-            "id": 4,
-            "sucursal": "contraesquina"
-          }],
-          ajax: null*/
-          /**
-           * usando url borrar data y cambiar ajax por:
-           */
-          //ajax:{url:"<spring:url value='/resources/bower_components/inventory/sucursales.json'/>"}
+          shrinkToFit: false,
+          autoresizeOnLoad: false,
         }
       });
       $("#inventory-wrap").on("inventory.saveRow", function(e, data) {

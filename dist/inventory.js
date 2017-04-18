@@ -1,7 +1,7 @@
 /*
  *  inventory - v4.1.0
  *  A jump-start for jQuery plugins development.
- *  
+ *
  *
  *  Made by JD-R2
  *  Under MIT License
@@ -11,6 +11,7 @@
     // Create the defaults once
     var pluginName = "inventory",
         defaults = {
+            mergeConfig: false,
             marca: true,
             advancedSearch: true,
             title: "Listado del Inventario",
@@ -123,10 +124,128 @@
     // The actual plugin constructor
     function Plugin( element, options ) {
         this.element = element;
-        // jQuery has an extend method which merges the contents of two or
-        // more objects, storing the result in the first object. The first object
-        // is generally empty as we don't want to alter the default options for
-        // future instances of the plugin
+        if ( options.mergeConfig ) {
+            options = $.extend( true, {}, {
+                marca: false,
+                advancedSearch: false,
+                jqgrid: {
+                    loadonce: false,
+                    cmTemplate: { sortable: false },
+                    colModel: [ {
+                        name: "id"
+                    }, {
+                        name: "branchId"
+                    }, {
+                        name: "branchName"
+                    }, {
+                        name: "productId"
+                    }, {
+                        name: "productName"
+                    }, {}, {
+                        name: "stockQuantity"
+                    }, {
+                        name: "minQuantity"
+                    }, {
+                        name: "maxQuantity"
+                    }, {
+                        name: "cost"
+                    }, {
+                        name: "publicPrice"
+                    } ],
+                    prmNames: {
+                        page: "draw",
+                        rows: "length"
+                    },
+                    jsonReader: {
+                        root: "data",
+                        page: "draw",
+                        records: "recordsFiltered"
+                    },
+                    ajaxGridOptions: {
+                        url: './ajaxinventorylist',
+                        method: 'POST',
+                        async: true,
+                        contentType: "application/json",
+                        dataType: "json",
+                        mimeType: "application/json"
+                    },
+                    serializeGridData: function( data ) {
+                        var t1 = $( "#branchesFilter" ).find( "option:selected" ).val( );
+                        var t2 = $( "#productsFilter" ).val( );
+                        $.extend( data, {
+                            "columns": [ {
+                                "data": "branchName"
+                            }, {
+                                "data": "productName"
+                            }, {
+                                "data": "stockQuantity"
+                            }, {
+                                "data": "minQuantity"
+                            }, {
+                                "data": "maxQuantity"
+                            }, {
+                                "data": "cost"
+                            }, {
+                                "data": "publicPrice"
+                            } ],
+                            "start": ( data.draw - 1 ) * data.length,
+                            "search": {},
+                            "target1": t1 ? t1 : "",
+                            "target2": t2,
+                            "target3": ""
+                        } );
+                        return JSON.stringify( data );
+                    },
+                    loadError: function( response, error, xhr ) {
+                        console.log( error );
+                        console.log( response );
+                    },
+                    beforeProcessing: function( response ) {
+                        response.recordsFiltered = parseInt( response.recordsFiltered );
+                        var div = response.recordsFiltered / $( this ).getGridParam( 'rowNum' );
+                        response.total = Math.ceil( div );
+                    },
+                },
+                select2: {
+                    allowClear: true,
+                    multiple: false,
+                    placeholder: {
+                        id: "",
+                        placeholder: "Selecciona"
+                    },
+                    ajax: {
+                        url: "./ajaxBranchSimpleCatalogRequest",
+                        method: "POST",
+                        async: true,
+                        contentType: "application/json",
+                        dataType: "json",
+                        mimeType: "application/json",
+                        data: function( params ) {
+                            return '{ "catalogName":"Cat_Branch","language": "es" }'
+                        },
+                        processResults: function( data, params ) {
+                            params.page = params.page || 1;
+                            return {
+                                results: data.Cat_Branch,
+                                pagination: {
+                                    more: ( params.page * 30 ) < data.total_count
+                                }
+                            };
+                        },
+                        success: function( data ) {
+                            // $("#branchesFilter").select2("destroy");
+                        }
+                    },
+                    templateResult: function( repo ) {
+                        // se puede colocar html en return
+                        return repo.value;
+                    },
+                    templateSelection: function( repo ) {
+                        return repo.value;
+                    }
+                }
+            }, options );
+        }
         this.settings = $.extend( true, {}, {
             jqgrid: {
                 ondblClickRow: ondblClickRow,
@@ -301,7 +420,7 @@
             $grid.on( "jqGridFilterReset", function( e ) {
                 //.closest(".modal").modal('toggle');
             } );
-            $grid.on( "jqGridAfterLoadComplete", function( ) {
+            $grid.on( "jqGridBeforeRequest", function( ) {
                 if ( !inventory.$grid.jqGrid( "getGridParam", "search" ) ) {
                     inventory.filterDomClear( );
                 }
@@ -459,10 +578,6 @@
             console.log( funcs );
             console.log( "------------" );
             return [ JSON.stringify( defaults ), JSON.stringify( funcs ) ];
-        },
-        helloW: function( text ) {
-            // some logic
-            return "text: " + text + ", my index: " + $( this.element ).text( text ).index( );
         }
     } );
     // preventing against multiple instantiations,
