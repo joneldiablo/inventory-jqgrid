@@ -45,11 +45,16 @@
 }
 
 .inventory .ui-jqgrid-btable tbody>tr.active>td {
-  background-color: #ecf6e8 !important;
+  background-color: #EBEFF2 !important;
+}
+
+.inventory .table>tbody>tr.success>td {
+  background-color: #B8CDDD;
+  border-color: #B8CDDD;
 }
 
 .inventory .ui-jqgrid-btable tbody>tr.active.success>td {
-  background-color: #dff0d8 !important;
+  background-color: #B8CDDD !important;
 }
 
 .inventory input[type=text].editable.form-control {
@@ -136,4 +141,8 @@
 .inventory .select2-selection {
   height: 37px;
   line-height: 1.3;
+}
+
+.inventory span.ui-jqgrid-resize {
+  right: -7px;
 }

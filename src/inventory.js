@@ -3,32 +3,116 @@
     // Create the defaults once
     var pluginName = "inventory",
         defaults = {
-            mergeConfig: false,
-            marca: true,
-            advancedSearch: true,
+            advancedSearch: false,
             title: "Listado del Inventario",
-            dataLoaded: false,
-            dataProductos: {},
             jqgrid: {
-                url: "http://localhost:3000/inventario",
-                colNames: [ "", "", "Sucursal", "", "Producto", "Marca", "Existencia", "Mínimo", "Máximo", "Costo", "Precio", "" ],
-                colModel: [
-                    { name: "id", editable: false, sortable: false, hidden: true },
-                    { name: "idSucursal", editable: false, sortable: false, hidden: true },
-                    { name: "sucursal", align: "left", editable: false, sorttype: latinize, stype: "text", searchoptions: { sopt: [ "eq", "ne", "bw", "bn", "ew", "en", "cn", "nc", "nu", "nn", "in", "ni" ] } },
-                    { name: "idProducto", editable: false, sortable: false, hidden: true },
-                    { name: "producto", align: "left", editable: false, sorttype: latinize, stype: "text", searchoptions: { sopt: [ "eq", "ne", "bw", "bn", "ew", "en", "cn", "nc", "nu", "nn", "in", "ni" ] } },
-                    { name: "marca", align: "left", editable: false, sorttype: latinize, stype: "text", searchoptions: { sopt: [ "eq", "ne", "bw", "bn", "ew", "en", "cn", "nc", "nu", "nn", "in", "ni" ] } },
-                    { name: "existencia", template: "number", autoResizableMinColSize: 50, editable: true, autoResizing: { minColWidth: 50, resetWidthOrg: false, compact: false, fixWidthOnShrink: true } },
-                    { name: "minimo", template: "number", autoResizableMinColSize: 50, editable: true, autoResizing: { minColWidth: 50, resetWidthOrg: false, compact: false, fixWidthOnShrink: true } },
-                    { name: "maximo", template: "number", autoResizableMinColSize: 50, editable: true, autoResizing: { minColWidth: 50, resetWidthOrg: false, compact: false, fixWidthOnShrink: true } },
-                    { name: "costo", formatter: "currency", autoResizableMinColSize: 50, editable: true, align: "right", autoResizing: { minColWidth: 50, resetWidthOrg: false, compact: false, fixWidthOnShrink: true }, formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "$ " }, searchoptions: { sopt: [ "eq", "ne", "lt", "le", "gt", "ge" ] } },
+                url: './ajaxinventorylist',
+                loadonce: false,
+                colNames: [ "", "", "Sucursal", "", "Producto", "Existencia", "Mínimo", "Máximo", "Costo", "Precio", "" ],
+                colModel: [ {
+                        name: "id",
+                        editable: false,
+                        sortable: false,
+                        hidden: true
+                    },
                     {
-                        name: "precio",
+                        name: "branchId",
+                        editable: false,
+                        sortable: false,
+                        hidden: true
+                    },
+                    {
+                        name: "branchName",
+                        align: "left",
+                        editable: false,
+                        sorttype: latinize,
+                        stype: "text",
+                        width: 150,
+                        searchoptions: {
+                            sopt: [ "eq", "ne", "bw", "bn", "ew", "en", "cn", "nc", "nu", "nn", "in", "ni" ]
+                        }
+                    },
+                    {
+                        name: "productId",
+                        editable: false,
+                        sortable: false,
+                        hidden: true
+                    },
+                    {
+                        name: "productName",
+                        align: "left",
+                        editable: false,
+                        sorttype: latinize,
+                        stype: "text",
+                        width: 150,
+                        searchoptions: {
+                            sopt: [ "eq", "ne", "bw", "bn", "ew", "en", "cn", "nc", "nu", "nn", "in", "ni" ]
+                        }
+                    },
+                    {
+                        name: "stockQuantity",
+                        template: "number",
+                        editable: true,
+                        width: 90,
+                        autoResizing: {
+                            minColWidth: 50,
+                            resetWidthOrg: false,
+                            compact: false,
+                            fixWidthOnShrink: true
+                        }
+                    },
+                    {
+                        name: "minQuantity",
+                        template: "number",
+                        editable: true,
+                        width: 90,
+                        autoResizing: {
+                            minColWidth: 50,
+                            resetWidthOrg: false,
+                            compact: false,
+                            fixWidthOnShrink: true
+                        }
+                    },
+                    {
+                        name: "maxQuantity",
+                        template: "number",
+                        editable: true,
+                        width: 90,
+                        autoResizing: {
+                            minColWidth: 50,
+                            resetWidthOrg: false,
+                            compact: false,
+                            fixWidthOnShrink: true
+                        }
+                    },
+                    {
+                        name: "cost",
                         formatter: "currency",
-                        autoResizableMinColSize: 50,
                         editable: true,
                         align: "right",
+                        width: 90,
+                        autoResizing: {
+                            minColWidth: 50,
+                            resetWidthOrg: false,
+                            compact: false,
+                            fixWidthOnShrink: true
+                        },
+                        formatoptions: {
+                            decimalSeparator: ".",
+                            thousandsSeparator: ",",
+                            decimalPlaces: 2,
+                            prefix: "$ "
+                        },
+                        searchoptions: {
+                            sopt: [ "eq", "ne", "lt", "le", "gt", "ge" ]
+                        }
+                    },
+                    {
+                        name: "publicPrice",
+                        formatter: "currency",
+                        editable: true,
+                        align: "right",
+                        width: 90,
                         autoResizing: {
                             minColWidth: 50,
                             resetWidthOrg: false,
@@ -55,7 +139,6 @@
                 ],
                 datatype: "json",
                 hidegrid: false,
-                loadonce: true,
                 navOptions: {
                     reloadGridOptions: {
                         fromServer: true
@@ -63,11 +146,12 @@
                 },
                 altRows: true,
                 autowidth: true,
-                shrinkToFit: true,
+                shrinkToFit: false,
                 viewrecords: true,
                 loadui: true,
-                autoresizeOnLoad: true,
+                autoresizeOnLoad: false,
                 cmTemplate: {
+                    sortable: false,
                     autoResizable: true,
                     editable: true
                 },
@@ -75,7 +159,7 @@
                 iconSet: "fontAwesome",
                 rowNum: 10,
                 autoResizing: {
-                    compact: true
+                    compact: false
                 },
                 rowList: [ 10, 20, 50 /*, "10000:todos"*/ ],
                 autoencode: true,
@@ -97,162 +181,46 @@
                     groupSummary: [ false ],
                     groupSummaryPos: [ "header" ],
                     groupCollapse: true
+                },
+                prmNames: {
+                    page: "draw",
+                    rows: "length"
+                },
+                jsonReader: {
+                    root: "data",
+                    page: "draw",
+                    records: "recordsFiltered"
+                },
+                ajaxGridOptions: {
+                    method: "POST",
+                    async: true,
+                    contentType: "application/json",
+                    dataType: "json",
+                    mimeType: "application/json"
                 }
             },
-            select2: {
-                language: "es",
-                minimumInputLength: 0,
-                ajax: {
-                    url: "http://localhost:3000/sucursales",
-                    dataType: "json",
-                    delay: 250,
-                    cache: true,
-                    data: {
-                        language: "es"
-                    }
-                }
+            branches: {
+                url: "./ajaxBranchSimpleCatalogRequest",
+                method: "POST",
+                async: true,
+                contentType: "application/json",
+                dataType: "json",
+                mimeType: "application/json",
+                data: "{ \"catalogName\":\"Cat_Branch\",\"language\": \"es\" }"
             }
         };
     // The actual plugin constructor
     function Plugin( element, options ) {
         this.element = element;
-        if ( options.mergeConfig ) {
-            options = $.extend( true, {}, {
-                marca: false,
-                advancedSearch: false,
-                jqgrid: {
-                    loadonce: false,
-                    cmTemplate: { sortable: false },
-                    colModel: [ {
-                        name: "id"
-                    }, {
-                        name: "branchId"
-                    }, {
-                        name: "branchName"
-                    }, {
-                        name: "productId"
-                    }, {
-                        name: "productName"
-                    }, {}, {
-                        name: "stockQuantity"
-                    }, {
-                        name: "minQuantity"
-                    }, {
-                        name: "maxQuantity"
-                    }, {
-                        name: "cost"
-                    }, {
-                        name: "publicPrice"
-                    } ],
-                    prmNames: {
-                        page: "draw",
-                        rows: "length"
-                    },
-                    jsonReader: {
-                        root: "data",
-                        page: "draw",
-                        records: "recordsFiltered"
-                    },
-                    ajaxGridOptions: {
-                        url: './ajaxinventorylist',
-                        method: 'POST',
-                        async: true,
-                        contentType: "application/json",
-                        dataType: "json",
-                        mimeType: "application/json"
-                    },
-                    serializeGridData: function( data ) {
-                        var t1 = $( "#branchesFilter" ).find( "option:selected" ).val( );
-                        var t2 = $( "#productsFilter" ).val( );
-                        $.extend( data, {
-                            "columns": [ {
-                                "data": "branchName"
-                            }, {
-                                "data": "productName"
-                            }, {
-                                "data": "stockQuantity"
-                            }, {
-                                "data": "minQuantity"
-                            }, {
-                                "data": "maxQuantity"
-                            }, {
-                                "data": "cost"
-                            }, {
-                                "data": "publicPrice"
-                            } ],
-                            "start": ( data.draw - 1 ) * data.length,
-                            "search": {},
-                            "target1": t1 ? t1 : "",
-                            "target2": t2,
-                            "target3": ""
-                        } );
-                        return JSON.stringify( data );
-                    },
-                    loadError: function( response, error, xhr ) {
-                        console.log( error );
-                        console.log( response );
-                    },
-                    beforeProcessing: function( response ) {
-                        response.recordsFiltered = parseInt( response.recordsFiltered );
-                        var div = response.recordsFiltered / $( this ).getGridParam( 'rowNum' );
-                        response.total = Math.ceil( div );
-                    },
-                },
-                select2: {
-                    allowClear: true,
-                    multiple: false,
-                    placeholder: {
-                        id: "",
-                        placeholder: "Selecciona"
-                    },
-                    ajax: {
-                        url: "./ajaxBranchSimpleCatalogRequest",
-                        method: "POST",
-                        async: true,
-                        contentType: "application/json",
-                        dataType: "json",
-                        mimeType: "application/json",
-                        data: function( params ) {
-                            return '{ "catalogName":"Cat_Branch","language": "es" }'
-                        },
-                        processResults: function( data, params ) {
-                            params.page = params.page || 1;
-                            return {
-                                results: data.Cat_Branch,
-                                pagination: {
-                                    more: ( params.page * 30 ) < data.total_count
-                                }
-                            };
-                        },
-                        success: function( data ) {
-                            // $("#branchesFilter").select2("destroy");
-                        }
-                    },
-                    templateResult: function( repo ) {
-                        // se puede colocar html en return
-                        return repo.value;
-                    },
-                    templateSelection: function( repo ) {
-                        return repo.value;
-                    }
-                }
-            }, options );
-        }
-        this.settings = $.extend( true, {}, {
+        this.settings = $.extend( true, {}, defaults, {
             jqgrid: {
                 ondblClickRow: ondblClickRow,
-                onSelectRow: onSelectRow
-            },
-            select2: {
-                ajax: {
-                    data: dataSelect2,
-                    processResults: processResults
-                },
-                escapeMarkup: escapeMarkup, // let our custom formatter work
-                templateResult: formatRepo, // omitted for brevity, see the source of this page
-                templateSelection: formatRepoSelection // omitted for brevity, see the source of this page
+                onSelectRow: onSelectRow,
+                serializeGridData: serializeGridData,
+                loadError: loadError,
+                beforeProcessing: beforeProcessing
             }
-        }, defaults, options );
+        }, options );
         this._defaults = defaults;
         this._name = pluginName;
         this.init( );
@@ -262,40 +230,6 @@
         return string.replace( /-([a-z])/ig, function( all, letter ) {
             return letter.toUpperCase( );
         } );
-    }
-
-    function formatRepo( repo ) {
-        //se puede colocar html en return
-        return repo.sucursal;
-    }
-
-    function formatRepoSelection( repo ) {
-        return repo.sucursal;
-    }
-
-    function dataSelect2( params ) {
-        return {
-            q: params.term, // search term
-            page: params.page
-        };
-    }
-
-    function processResults( data, params ) {
-        // parse the results into the format expected by Select2
-        // since we are using custom formatting functions we do not need to
-        // alter the remote JSON data, except to indicate that infinite
-        // scrolling can be used
-        params.page = params.page || 1;
-        return {
-            results: data,
-            pagination: {
-                more: ( params.page * 30 ) < data.total_count
-            }
-        };
-    }
-
-    function escapeMarkup( markup ) {
-        return markup;
     }
 
     function onSelectRow( rowid, status, e ) {
@@ -312,17 +246,49 @@
             focusField: e.target
         } );
     }
+
+    function beforeProcessing( response ) {
+        response.recordsFiltered = parseInt( response.recordsFiltered );
+        var div = response.recordsFiltered / $( this ).getGridParam( 'rowNum' );
+        response.total = Math.ceil( div );
+    }
+
+    function loadError( response, error, xhr ) {
+        console.log( error );
+        console.log( response );
+    }
+
+    function serializeGridData( data ) {
+        var t1 = $( "#branchesFilter" ).find( "option:selected" ).val( );
+        var t2 = $( "#productsFilter" ).val( );
+        $.extend( data, {
+            "columns": [ {
+                "data": "branchName"
+            }, {
+                "data": "productName"
+            }, {
+                "data": "stockQuantity"
+            }, {
+                "data": "minQuantity"
+            }, {
+                "data": "maxQuantity"
+            }, {
+                "data": "cost"
+            }, {
+                "data": "publicPrice"
+            } ],
+            "start": ( data.draw - 1 ) * data.length,
+            "search": {},
+            "target1": t1 ? t1 : "",
+            "target2": t2,
+            "target3": ""
+        } );
+        return JSON.stringify( data );
+    }
     // Avoid Plugin.prototype conflicts
     $.extend( Plugin.prototype, {
         init: function( ) {
             var inventory = this;
-            /**
-             * remove from jqgrid settings "marca" if marca==false;
-             */
-            if ( !inventory.settings.marca ) {
-                inventory.settings.jqgrid.colNames.splice( 5, 1 );
-                inventory.settings.jqgrid.colModel.splice( 5, 1 );
-            }
             /**
              * initialize elements
              */
@@ -330,10 +296,10 @@
             var $title = $( "<h4>", {
                 "class": "header-title m-t-0 m-b-30"
             } ).text( inventory.settings.title );
-            var $rowFilters = $( "<div>", { "class": "row" } ).append( "<div class = 'col-sm-12' ></div>" );
+            var $rowFilters = $( "<div>", { "class": "row" } );
             var $col4B = $( "<div>", { "class": "form-group col-sm-4" } );
             var $labelB = $( "<label>", { for: "branchesFilter", "class": "control-label btn-block" } ).text( "Sucursales" );
-            var $selectBranchesFilter = $( "<select>", { "class": "form-control", id: "branchesFilter", multiple: "multiple" } );
+            var $selectBranchesFilter = $( "<select>", { "class": "form-control", id: "branchesFilter" } );
             var $col4P = $col4B.clone( );
             var $labelP = $( "<label>", { for: "productsFilter", "class": "control-label" } ).text( "Producto" );
             var $inputProductsFilter = $( "<input>", { type: "text", "class": "form-control", id: "productsFilter" } );
@@ -341,8 +307,8 @@
             var $inputClearFilter = $( "<button>", { type: "button", "class": "form-control btn btn-danger disabled", id: "clearFilter", title: "Limpiar filtros", disabled: "disabled", css: { marginTop: 25 } } ).html( "<i class='fa fa-filter-remove'></i>" ).click( function( ) { inventory.filterClear( ); } );
             var $grid = $( "<table>" );
             $container.append( $title, $rowFilters, $grid );
-            $rowFilters.find( "div" ).append( $col4B, $col4P, $col4C );
-            $col4B.append( $labelB.append( $selectBranchesFilter ) );
+            $rowFilters.append( $col4B, $col4P, $col4C );
+            $col4B.append( $labelB, $selectBranchesFilter );
             $col4P.append( $labelP, $inputProductsFilter );
             $col4C.append( $inputClearFilter );
             $( inventory.element ).append( $container );
@@ -350,7 +316,18 @@
             inventory.$selectBranchesFilter = $selectBranchesFilter;
             inventory.$inputProductsFilter = $inputProductsFilter;
             inventory.$inputClearFilter = $inputClearFilter;
-            $selectBranchesFilter.select2( inventory.settings.select2 );
+            //$selectBranchesFilter.select2( inventory.settings.select2 );
+            $.ajax( inventory.settings.branches ).done( function( data ) {
+                if ( typeof data.Cat_Branch === "undefined" ) {
+                    $( inventory.element ).trigger( "inventory.branchesError", data );
+                    return;
+                }
+                $selectBranchesFilter.append( $( "<option>", { value: 0 } ).text( "Todas" ) );
+                $.each( data.Cat_Branch, function( i, elem ) {
+                    var option = $( "<option>", { value: elem.id } ).text( elem.value );
+                    $selectBranchesFilter.append( option );
+                } );
+            } );
             $grid.jqGrid( inventory.settings.jqgrid )
                 .jqGrid( "gridResize" ).jqGrid( "bindKeys" )
                 .jqGrid( "navGrid", {
@@ -373,19 +350,14 @@
                         var st = $inputProductsFilter.val( );
                         inventory.filterByProducts( st );
                         inventory.keyupDelay = false;
-                    }, 300 );
+                    }, 1000 );
                 }
                 return false;
             } );
             $selectBranchesFilter.on( "change", function( e ) {
                 var $selector = $( this );
-                var branches = $selector.select2( "data" ).map( function( elem ) {
-                    return elem.sucursal;
-                } );
+                var branches = $selector.find( "option:selected" ).text( );
                 inventory.filterByBranches( branches );
-                setTimeout( function( ) {
-                    $selector.parent( ).find( ".select2-selection__choice" ).addClass( "btn-primary" );
-                }, 100 );
                 return false;
             } );
             $( ".ui-jqgrid-title" ).click( function( ) {
@@ -401,10 +373,25 @@
                 $( inventory.element ).trigger( "inventory.saveRow", data );
             } );
             $grid.on( "jqGridInlineEditRow", function( e, rowid, iRow ) {
-                $( "#" + rowid ).find( "input" ).addClass( "form-control" );
+                $( "#" + rowid ).find( "input, select" ).addClass( "form-control" );
             } );
             $( window ).resize( function( ) {
-                $grid.setGridWidth( $grid.closest( ".ui-jqgrid" ).parent( ).innerWidth( true ) );
+                if ( !inventory.resizeDelay ) {
+                    inventory.resizeDelay = setTimeout( function( ) {
+                        var s = $grid.closest( ".ui-jqgrid" ).parent( ).width( );
+                        if ( s > 610 ) {
+                            if ( !$grid.jqGrid( "getGridParam", "shrinkToFit" ) ) {
+                                $grid.jqGrid( "setGridParam", { shrinkToFit: true } );
+                            }
+                        } else {
+                            if ( $grid.jqGrid( "getGridParam", "shrinkToFit" ) ) {
+                                $grid.jqGrid( "setGridParam", { shrinkToFit: false } );
+                            }
+                        }
+                        $grid.jqGrid( "setGridWidth", s );
+                        inventory.resizeDelay = false;
+                    }, 500 );
+                }
             } ).trigger( "resize" );
             $grid.on( "jqGridFilterBeforeShow", function( e, $form ) {
                 $form.closest( ".ui-jqdialog" ).addClass( "inventory" );
@@ -521,13 +508,11 @@
             if ( !filters ) {
                 filters = this.filterObj( );
             }
-            for ( var i in toSearch ) {
-                rules.push( {
-                    field: "sucursal",
-                    op: "eq",
-                    data: toSearch[ i ]
-                } );
-            }
+            rules.push( {
+                field: "sucursal",
+                op: "eq",
+                data: toSearch
+            } );
             var branchesObj = filters.groups.filter( function( elem ) {
                 if ( elem.criteria === "branches" ) {
                     elem.rules = rules;
@@ -570,10 +555,6 @@
             console.log( funcs );
             console.log( "------------" );
             return [ JSON.stringify( defaults ), JSON.stringify( funcs ) ];
-        },
-        helloW: function( text ) {
-            // some logic
-            return "text: " + text + ", my index: " + $( this.element ).text( text ).index( );
         }
     } );
     // preventing against multiple instantiations,
