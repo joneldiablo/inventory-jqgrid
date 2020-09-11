@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Expires" content="0" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>jQuery inventory</title>
+    <!-- bower_components styles -->
+    <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="lib/free-jqgrid/dist/css/ui.jqgrid.min.css" />
+    <link rel="stylesheet" href="lib/components-font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="lib/fontawesome-actions/dist/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="lib/select2/dist/css/select2.min.css">
+    <link rel="stylesheet" href="lib/select2-bootstrap-theme/dist/select2-bootstrap.min.css">
+    <!-- bower_components scripts -->
+    <script src="lib/jquery/dist/jquery.min.js"></script>
+    <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="lib/free-jqgrid/dist/jquery.jqgrid.min.js"></script>
+    <script src="lib/latinize/latinize.js"></script>
+    <script src="lib/select2/dist/js/select2.full.min.js"></script>
+    <script src="lib/select2/dist/js/i18n/es.js"></script>
+    <!--tps styles -->
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/core.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/components.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/icons.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/pages.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/responsive.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/tps.css" rel="stylesheet" type="text/css" />
+
+    <!--inventory -->
+    <link rel="stylesheet" href="dist/inventory.min.css" />
+    <script src="dist/i18n/locale.es-MX.min.js"></script>
+    <script src="dist/inventory.min.js"></script>
+
+</head>
+
+<body>
+    <div class="content-page">
+        <div class="content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <br>
+                        <div id="inventory-wrap">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $("meta[name='_csrf']").attr("content")
+                }
+            });
+            $("#inventory-wrap").inventory({
+                jqgrid: {
+                    url: 'https://inventory-jqgrid-dummy-data.herokuapp.com/inventario'
+                },
+                branches: {
+                    url: 'https://inventory-jqgrid-dummy-data.herokuapp.com/sucursales'
+                },
+            });
+            $("#inventory-wrap").on("inventory.saveRow", function(e, data) {
+                console.log(data);
+            });
+        });
+    </script>
+</body>
+
+</html>
